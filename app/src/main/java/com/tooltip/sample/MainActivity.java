@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
                         .setDismissOnClick(false)
                         .setCornerRadius(20f)
                         .setGravity(Gravity.BOTTOM)
+                        .setTextAlignment(View.TEXT_ALIGNMENT_CENTER)
                         .setText(R.string.tooltip_hello_world);
                 builder.show();
             }

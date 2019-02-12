@@ -34,10 +34,13 @@ import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DimenRes;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IntDef;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.annotation.StringRes;
 import android.support.annotation.StyleRes;
 import android.support.v4.content.res.ResourcesCompat;
@@ -55,6 +58,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Tooltip
@@ -115,6 +121,9 @@ public final class Tooltip {
         TextViewCompat.setCompoundDrawablesRelativeWithIntrinsicBounds(textView, builder.mDrawableStart, builder.mDrawableTop, builder.mDrawableEnd, builder.mDrawableBottom);
 
         textView.setText(builder.mText);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            textView.setTextAlignment(builder.mTextAlignment);
+        }
         textView.setPadding(builder.mPadding, builder.mPadding, builder.mPadding, builder.mPadding);
         textView.setLineSpacing(builder.mLineSpacingExtra, builder.mLineSpacingMultiplier);
         textView.setTypeface(builder.mTypeface, builder.mTextStyle);
@@ -394,6 +403,7 @@ public final class Tooltip {
         private int mBackgroundColor;
         private int mGravity;
         private int mTextAppearance;
+        private int mTextAlignment;
         private int mTextStyle;
         private int mPadding;
         private int mMaxWidth;
@@ -762,6 +772,17 @@ public final class Tooltip {
         }
 
         /**
+         * Sets {@link Tooltip} text alignment
+         *
+         * @return This {@link Builder} object to allow for chaining of calls to set methods
+         */
+        @RequiresApi(17)
+        public Builder setTextAlignment(@TextAlignment int textAlignment) {
+            mTextAlignment = textAlignment;
+            return this;
+        }
+
+        /**
          * Sets {@link Tooltip} text from resource
          *
          * @return This {@link Builder} object to allow for chaining of calls to set methods
@@ -940,4 +961,16 @@ public final class Tooltip {
             return tf;
         }
     }
+
+    @IntDef({
+            android.view.View.TEXT_ALIGNMENT_INHERIT,
+            android.view.View.TEXT_ALIGNMENT_GRAVITY,
+            android.view.View.TEXT_ALIGNMENT_CENTER,
+            android.view.View.TEXT_ALIGNMENT_TEXT_START,
+            android.view.View.TEXT_ALIGNMENT_TEXT_END,
+            android.view.View.TEXT_ALIGNMENT_VIEW_START,
+            android.view.View.TEXT_ALIGNMENT_VIEW_END
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface TextAlignment {}
 }
